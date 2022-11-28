@@ -33,7 +33,6 @@ export const useAuthStore = defineStore({
         //display alert
         successAlert(response);
       } catch (error: any) {
-        console.log(error);
         errorAlert(error);
       }
     },

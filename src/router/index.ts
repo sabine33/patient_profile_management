@@ -1,11 +1,15 @@
-import { createRouter, createWebHistory } from "vue-router";
+import {
+  createRouter,
+  createWebHashHistory,
+  createWebHistory,
+} from "vue-router";
 
 import { useAuthStore } from "@/store";
 import authRoutes from "./auth.route";
 import dashboardRoutes from "./dashboard.route";
 
 export const router = createRouter({
-  history: createWebHistory(import.meta.env.BASE_URL),
+  history: createWebHashHistory(import.meta.env.BASE_URL),
   linkActiveClass: "active",
   routes: [
     { ...authRoutes },
