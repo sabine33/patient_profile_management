@@ -9,25 +9,25 @@ const apiClient = axios.create({
     "Content-Type": "application/json",
   },
 });
-const authHeader = () => {
+function authHeader() {
   try {
     const token = JSON.parse(
       localStorage.getItem("token") ?? JSON.stringify(null)
     );
-    const user = JSON.parse(
-      localStorage.getItem("user") ?? JSON.stringify(null)
-    );
-
+    // const user = JSON.parse(
+    //   localStorage.getItem("user") ?? JSON.stringify(null)
+    // );
     return `Bearer ${token}`;
   } catch (ex) {
     return "";
   }
-};
+}
 
 apiClient.defaults.headers.common["Authorization"] = authHeader();
 
-axios.interceptors.request.use((config) => {
+apiClient.interceptors.request.use((config) => {
   apiClient.defaults.headers.common["Authorization"] = authHeader();
+  console.log(authHeader());
   return config;
 });
 

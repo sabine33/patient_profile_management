@@ -2,7 +2,6 @@ import { defineStore } from "pinia";
 import { IPatient, IPatientStore } from "@/interfaces";
 import { Patient } from "@/helpers/apiHelpers";
 import { errorAlert, successAlert } from "@/helpers";
-
 export const usePatientsStore = defineStore({
   id: "patients",
   state: (): IPatientStore => {

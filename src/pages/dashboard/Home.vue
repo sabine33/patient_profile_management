@@ -12,7 +12,7 @@
 <script setup lang="ts">
 import { usePatientsStore, useAuthStore } from '@/store';
 import { storeToRefs } from 'pinia';
-import { onMounted } from 'vue';
+import { onBeforeMount, onMounted, nextTick } from 'vue';
 import SpecialPatientsTable from './SpecialPatientsTable.vue';
 import { InfoCard } from '@/components/dashboard';
 const patientStore = usePatientsStore();
@@ -21,7 +21,7 @@ const { stats } = storeToRefs(patientStore);
 const { token } = useAuthStore();
 
 
-onMounted(async () => {
+onBeforeMount(async () => {
     await patientStore.fetchStats();
 });
 </script>
