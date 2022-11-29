@@ -83,7 +83,7 @@
 <script setup lang="ts">
 import Vue3TagsInput from "vue3-tags-input";
 import { useRoute, useRouter } from "vue-router";
-import { ref, computed, onMounted } from "vue";
+import { ref, computed, onMounted, getCurrentInstance } from "vue";
 import { storeToRefs } from "pinia";
 import { usePatientsStore } from "@/store";
 import { Uploads } from "@/helpers/apiHelpers";
@@ -93,34 +93,30 @@ import { Form, Field } from "vee-validate";
 import { IPatient } from "@/interfaces";
 import { successAlert } from "@/helpers";
 
-
 const route = useRoute();
 const router = useRouter();
 let { mode, id } = route.params;
 const patientStore = usePatientsStore();
 let file = ref<File | any>(null);
 let remoteFilePath = ref("");
-
-
+const instance = getCurrentInstance();
 let { patient, loading, successResponse } = storeToRefs(patientStore);
-
 
 const loadPatient = async () => {
     if (mode !== "add") {
         await patientStore.getById(+id);
         console.log(successResponse.value);
         loading.value = false;
-    }
-    else {
+    } else {
         patient.value = {
             full_name: "",
             email: "",
             phone: "",
-            date_of_birth: '1994-07-17',
+            date_of_birth: "1994-07-17",
             allergies: [],
             address: "",
             avatar_filename: "",
-            is_special_attention: true
+            is_special_attention: true,
         };
     }
 };
@@ -147,7 +143,8 @@ const uploadImage = async (file: any) => {
     let response = await Uploads.uploadImage(file);
     remoteFilePath.value = response.data.filename;
     patient.value!.avatar_filename = remoteFilePath.value;
-    successAlert(response)
+    instance?.proxy?.$forceUpdate();
+    successAlert(response);
 };
 
 const isReadOnly = computed(() => {
@@ -186,6 +183,5 @@ const onSubmit = async () => {
 
 onMounted(async () => {
     await loadPatient();
-
 });
 </script>
