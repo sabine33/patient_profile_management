@@ -46,6 +46,7 @@
                         </router-link>
                     </li>
 
+                    <div class="mt-auto"></div>
                     <li class="nav-item">
                         <button class="nav-link" @click.prevent="authStore.logout()">
                             <i class="bi bi-box-arrow-left"></i> Logout

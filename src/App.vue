@@ -1,6 +1,6 @@
 <template>
   <div>
-    <notifications position="top right" />
+    <Notification />
     <div class="app-container" :class="authStore.user && 'bg-light'">
       <Header />
       <div class="pt-4 pb-4">

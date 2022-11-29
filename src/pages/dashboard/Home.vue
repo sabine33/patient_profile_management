@@ -12,11 +12,14 @@
 <script setup lang="ts">
 import { usePatientsStore } from '@/store';
 import { storeToRefs } from 'pinia';
-import { InfoCard } from '@/components/dashboard';
+import { onMounted } from 'vue';
 import SpecialPatientsTable from './SpecialPatientsTable.vue';
+import { InfoCard } from '@/components/dashboard';
 const patientStore = usePatientsStore();
 const { stats } = storeToRefs(patientStore);
 
-patientStore.fetchStats();
-console.log(stats)
+
+onMounted(async () => {
+    await patientStore.fetchStats();
+});
 </script>

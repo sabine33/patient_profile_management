@@ -71,7 +71,7 @@ import { IMAGE_URL } from '@/constants';
 import { IPatient } from '@/interfaces';
 import { usePatientsStore } from '@/store';
 import { storeToRefs } from 'pinia';
-import { computed } from 'vue';
+import { computed, onMounted } from 'vue';
 import { useRouter } from "vue-router";
 const patientStore = usePatientsStore();
 
@@ -102,7 +102,8 @@ const editItem = async (val: Partial<IPatient>) => {
     await router.push({ name: 'manage-patient', params: { mode: 'edit', id } })
 };
 
-
-patientStore.getAll();
+onMounted(async () => {
+    await patientStore.getAll();
+});
 
 </script>

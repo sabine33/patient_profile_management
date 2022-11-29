@@ -23,4 +23,5 @@ router.beforeEach(async (to) => {
     authStore.returnUrl = to.fullPath;
     return "/auth/login";
   }
+  return true;
 });

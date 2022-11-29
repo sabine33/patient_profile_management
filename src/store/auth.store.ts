@@ -3,6 +3,7 @@ import { defineStore } from "pinia";
 import { Auth } from "@/helpers/apiHelpers";
 import { router } from "@/router";
 import { errorAlert, successAlert } from "@/helpers";
+import { notify } from "@kyvg/vue3-notification";
 
 interface IAuthInterface {
   user: null | any;
@@ -22,7 +23,7 @@ export const useAuthStore = defineStore({
       try {
         //login via auth
         const response = await Auth.login(email, password);
-        alert(JSON.stringify(response.data));
+        // alert(JSON.stringify(response.data));
         //set local values
         this.user = response.data.user;
         this.token = response.data.token;
@@ -48,9 +49,10 @@ export const useAuthStore = defineStore({
     logout() {
       this.user = null;
       this.token = null;
-      localStorage.removeItem("user");
-      localStorage.removeItem("token");
+      localStorage.setItem("user", "");
+      localStorage.setItem("token", "");
       router.push("/auth/login");
+      notify({ title: "Successfully logged out" });
     },
   },
 });
