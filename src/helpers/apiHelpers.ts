@@ -1,7 +1,6 @@
-import { IPatient, IResponseType, IUser } from "@/interfaces";
-import axios, { AxiosResponse, AxiosError } from "axios";
+import { IPatient, IResponseType } from "@/interfaces";
+import axios, { AxiosResponse, AxiosError, AxiosRequestConfig } from "axios";
 const baseURL: string = import.meta.env.VITE_API_URL;
-import { useAuthStore } from "@/store";
 const apiClient = axios.create({
   baseURL: baseURL,
   headers: {
@@ -9,39 +8,38 @@ const apiClient = axios.create({
     "Content-Type": "application/json",
   },
 });
-function authHeader() {
-  try {
-    const token = JSON.parse(
-      localStorage.getItem("token") ?? JSON.stringify(null)
-    );
-    // const user = JSON.parse(
-    //   localStorage.getItem("user") ?? JSON.stringify(null)
-    // );
-    return `Bearer ${token}`;
-  } catch (ex) {
-    return "";
-  }
-}
-
-apiClient.defaults.headers.common["Authorization"] = authHeader();
-
-apiClient.interceptors.request.use((config) => {
-  apiClient.defaults.headers.common["Authorization"] = authHeader();
-  // console.log(authHeader());
-  return config;
-});
 
 const responseBody = (response: AxiosResponse): IResponseType => {
   return response.data;
 };
 
 const errorBody = (response: AxiosError) => {
+  console.log(response);
   let errorMessage = "Unknown error occured.";
   if (response && response.response && response.response.data) {
     errorMessage = (response.response as AxiosResponse).data["message"];
   }
   throw new Error(errorMessage);
 };
+
+apiClient.interceptors.request.use(
+  (config: AxiosRequestConfig) => {
+    if (config.url?.startsWith("/auth")) return config;
+
+    config.headers = config.headers ?? {};
+    const accessToken = JSON.parse(
+      localStorage.getItem("token") || JSON.stringify("")
+    );
+    if (accessToken) {
+      config.headers["Authorization"] = `Bearer ${accessToken}`;
+    }
+    return config;
+  },
+  (error) => {
+    return Promise.reject(error);
+  }
+);
+
 const requests = {
   get: (url: string) => apiClient.get(url).then(responseBody).catch(errorBody),
   post: (url: string, body: {}, headers?: {}) =>

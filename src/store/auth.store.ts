@@ -14,25 +14,21 @@ interface IAuthInterface {
 export const useAuthStore = defineStore({
   id: "auth",
   state: (): IAuthInterface => ({
-    user: JSON.parse(localStorage.getItem("user") || JSON.stringify("")),
+    user:
+      JSON.parse(localStorage.getItem("user") || JSON.stringify("")) || null,
+    token:
+      JSON.parse(localStorage.getItem("token") || JSON.stringify("")) || null,
     returnUrl: "/dashboard",
-    token: JSON.parse(localStorage.getItem("token") || JSON.stringify("")),
   }),
   actions: {
     async login(email: string, password: string) {
       try {
-        //login via auth
         const response = await Auth.login(email, password);
-        // alert(JSON.stringify(response.data));
-        //set local values
         this.user = response.data.user;
         this.token = response.data.token;
-        //fill localstorage
         localStorage.setItem("user", JSON.stringify(this.user));
         localStorage.setItem("token", JSON.stringify(this.token));
-        //redirect
         await router.push(this.returnUrl || "/");
-        //display alert
         successAlert(response);
       } catch (error: any) {
         errorAlert(error);
