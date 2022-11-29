@@ -1,9 +1,9 @@
 <script setup>
 import { Form, Field } from 'vee-validate';
-import * as Yup from 'yup';
 import { useAuthStore } from '@/store';
 import { ref } from "vue"
 import { loginSchema } from '@/schemas';
+import { errorAlert } from '@/helpers';
 
 let user = ref({
     'email': 'sabin.khanal.33@gmail.com',
@@ -11,10 +11,14 @@ let user = ref({
 })
 
 async function onSubmit(values) {
-    const authStore = useAuthStore();
-    const { email, password } = values;
-    await authStore.login(email, password);
-
+    try {
+        const authStore = useAuthStore();
+        const { email, password } = values;
+        await authStore.login(email, password);
+    }
+    catch (ex) {
+        errorAlert("Login failed because of some error.")
+    }
 }
 </script>
 

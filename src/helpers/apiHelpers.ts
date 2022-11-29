@@ -28,9 +28,10 @@ const responseBody = (response: AxiosResponse): IResponseType => {
 };
 
 const errorBody = (response: AxiosError) => {
-  let errorMessage =
-    (response.response as AxiosResponse).data["message"] ??
-    "Unknown error occured.";
+  let errorMessage = "Unknown error occured.";
+  if (response && response.response && response.response.data) {
+    errorMessage = (response.response as AxiosResponse).data["message"];
+  }
   throw new Error(errorMessage);
 };
 const requests = {
