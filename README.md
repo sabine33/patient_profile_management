@@ -27,9 +27,12 @@ yarn dev
 ## Screenshots
 
 ![Demo](screenshot_1.png?raw=true "Screenshot")
-![Demo](screenshot_2.png?raw=true "Screenshot")
-![Demo](screenshot_3.png?raw=true "Screenshot")
-![Demo](screenshot_4.png?raw=true "Screenshot")
+
+![Demo2](screenshot_2.png?raw=true "Screenshot")
+
+![Demo3](screenshot_3.png?raw=true "Screenshot")
+
+![Demo4](screenshot_4.png?raw=true "Screenshot")
 
 ## Tools Used
 
