@@ -91,6 +91,8 @@ import { IMAGE_URL } from "@/constants";
 import { patientSchema } from "@/schemas";
 import { Form, Field } from "vee-validate";
 import { IPatient } from "@/interfaces";
+import { successAlert } from "@/helpers";
+
 
 const route = useRoute();
 const router = useRouter();
@@ -145,6 +147,7 @@ const uploadImage = async (file: any) => {
     let response = await Uploads.uploadImage(file);
     remoteFilePath.value = response.data.filename;
     patient.value!.avatar_filename = remoteFilePath.value;
+    successAlert(response)
 };
 
 const isReadOnly = computed(() => {
