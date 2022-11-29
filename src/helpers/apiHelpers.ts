@@ -17,12 +17,8 @@ const authHeader = () => {
     const user = JSON.parse(
       localStorage.getItem("user") ?? JSON.stringify(null)
     );
-    let isLoggedIn = user && token;
-    if (isLoggedIn) {
-      return `Bearer ${token}`;
-    } else {
-      return "";
-    }
+
+    return `Bearer ${token}`;
   } catch (ex) {
     return "";
   }
