@@ -27,7 +27,7 @@ apiClient.defaults.headers.common["Authorization"] = authHeader();
 
 apiClient.interceptors.request.use((config) => {
   apiClient.defaults.headers.common["Authorization"] = authHeader();
-  console.log(authHeader());
+  // console.log(authHeader());
   return config;
 });
 
