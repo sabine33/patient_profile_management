@@ -14,9 +14,9 @@ interface IAuthInterface {
 export const useAuthStore = defineStore({
   id: "auth",
   state: (): IAuthInterface => ({
-    user: JSON.parse(localStorage.getItem("user")!),
+    user: JSON.parse(localStorage.getItem("user") || JSON.stringify("")),
     returnUrl: "/dashboard",
-    token: null,
+    token: JSON.parse(localStorage.getItem("token") || JSON.stringify("")),
   }),
   actions: {
     async login(email: string, password: string) {
@@ -31,7 +31,7 @@ export const useAuthStore = defineStore({
         localStorage.setItem("user", JSON.stringify(this.user));
         localStorage.setItem("token", JSON.stringify(this.token));
         //redirect
-        router.push(this.returnUrl || "/");
+        await router.push(this.returnUrl || "/");
         //display alert
         successAlert(response);
       } catch (error: any) {
@@ -42,6 +42,7 @@ export const useAuthStore = defineStore({
       try {
         const response = await Auth.signup(email, password);
         successAlert(response);
+        await router.push("/auth/login");
       } catch (ex) {
         errorAlert(ex);
       }

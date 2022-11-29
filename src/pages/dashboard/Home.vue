@@ -10,13 +10,15 @@
 </template>
 
 <script setup lang="ts">
-import { usePatientsStore } from '@/store';
+import { usePatientsStore, useAuthStore } from '@/store';
 import { storeToRefs } from 'pinia';
 import { onMounted } from 'vue';
 import SpecialPatientsTable from './SpecialPatientsTable.vue';
 import { InfoCard } from '@/components/dashboard';
 const patientStore = usePatientsStore();
+const authStore = useAuthStore();
 const { stats } = storeToRefs(patientStore);
+const { token } = useAuthStore();
 
 
 onMounted(async () => {

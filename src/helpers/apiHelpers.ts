@@ -10,18 +10,30 @@ const apiClient = axios.create({
   },
 });
 const authHeader = () => {
-  const token = JSON.parse(localStorage.getItem("token")!);
-  const user = JSON.parse(localStorage.getItem("user")!);
-
-  let isLoggedIn = user && token;
-  if (isLoggedIn) {
-    return `Bearer ${token}`;
-  } else {
+  try {
+    const token = JSON.parse(
+      localStorage.getItem("token") ?? JSON.stringify(null)
+    );
+    const user = JSON.parse(
+      localStorage.getItem("user") ?? JSON.stringify(null)
+    );
+    let isLoggedIn = user && token;
+    if (isLoggedIn) {
+      return `Bearer ${token}`;
+    } else {
+      return "";
+    }
+  } catch (ex) {
     return "";
   }
 };
 
 apiClient.defaults.headers.common["Authorization"] = authHeader();
+
+axios.interceptors.request.use((config) => {
+  apiClient.defaults.headers.common["Authorization"] = authHeader();
+  return config;
+});
 
 const responseBody = (response: AxiosResponse): IResponseType => {
   return response.data;

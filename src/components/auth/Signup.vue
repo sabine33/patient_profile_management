@@ -26,7 +26,7 @@ async function onSubmit(values) {
         password: '',
         passwordAgain: ''
     };
-
+    
 }
 </script>
 
