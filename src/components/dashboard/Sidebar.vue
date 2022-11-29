@@ -40,7 +40,7 @@
             <div class="collapse navbar-collapse" id="sidebarCollapse">
                 <!-- Navigation -->
                 <ul class="navbar-nav">
-                    <li class="nav-item" v-for="(route, index) in routes" :key="index">
+                    <li class="nav-item" v-for="(route, index) in routes.filter(x => !x['hidden'])" :key="index">
                         <router-link class="nav-link" :to="route.path">
                             <i :class="route.class"></i> {{ route.title }}
                         </router-link>

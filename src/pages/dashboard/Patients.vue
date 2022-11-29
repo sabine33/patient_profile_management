@@ -1,7 +1,7 @@
 <template>
     <div>
         <div class="" v-if="routeName == 'list'">
-            <PatientList></PatientList>
+            <List />
         </div>
         <div v-else>
             <router-view></router-view>
@@ -12,7 +12,7 @@
 
 <script setup lang="ts">
 import { useRoute, useRouter } from 'vue-router';
-import { PatientList } from '../patients';
+import { List } from '../patients';
 
 
 const route = useRoute();

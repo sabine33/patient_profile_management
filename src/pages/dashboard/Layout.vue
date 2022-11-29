@@ -17,7 +17,7 @@
                             <!-- Actions -->
                             <div class="col-sm-6 col-12 text-sm-end">
                                 <div class="mx-n1">
-                                    <button @click.prevent="addPatient"
+                                    <button @click.prevent="onAddItem"
                                         class="btn d-inline-flex btn-sm btn-primary mx-1">
                                         <span class="pe-2">
                                             <i class="bi bi-plus"></i>
@@ -56,20 +56,17 @@
 import { Sidebar } from "@/components/dashboard";
 import { useRouter, useRoute } from "vue-router";
 import { computed } from "vue";
-const router = useRouter();
+import { usePatientsStore } from "@/store";
+
 const route = useRoute();
+
+const patientStore = usePatientsStore();
+const { onAddItem } = patientStore;
 
 const getBreadcrumb = computed(() => {
     return route.fullPath.split("/");
 });
 
-const addPatient = async () => {
-    await router.push({
-        name: "manage-patient",
-        params: {
-            mode: "add",
-            id: -1,
-        },
-    });
-};
+
+
 </script>

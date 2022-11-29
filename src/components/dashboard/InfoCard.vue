@@ -5,7 +5,7 @@
                 <div class="row">
                     <div class="col">
                         <span class="h6 font-semibold text-muted text-sm d-block mb-2">Patients</span>
-                        <span class="h1 font-bold mb-0">{{ stats.count }}</span>
+                        <span class="h1 font-bold mb-0">{{ patientCount }}</span>
                     </div>
                     <div class="col-auto">
                         <div class="icon icon-shape bg-tertiary text-white text-lg rounded-circle">
@@ -20,6 +20,12 @@
 </template>
 
 <script lang="ts" setup>
-const props = defineProps(['stats'])
+import { storeToRefs } from "pinia";
+import { usePatientsStore } from "@/store/patients.store";
+const patientStore = usePatientsStore();
+const { patientCount } = storeToRefs(patientStore);
+
+patientStore.fetchPatientCount();
+
 
 </script>

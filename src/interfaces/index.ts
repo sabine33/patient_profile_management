@@ -27,12 +27,3 @@ export interface IResponseType {
   status: boolean;
   statusCode: number;
 }
-
-export interface IPatientStore {
-  patients: Partial<IPatient>[];
-  patient: Partial<IPatient> | null;
-  error: string | any;
-  loading: boolean;
-  successResponse: IResponseType | null;
-  stats: object;
-}
