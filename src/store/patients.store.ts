@@ -1,6 +1,6 @@
 import { defineStore } from "pinia";
-import { IPatient, IPatientStore, IResponseType } from "@/interfaces";
-import { Patient, Uploads } from "@/helpers/apiHelpers";
+import { IPatient, IPatientStore } from "@/interfaces";
+import { Patient } from "@/helpers/apiHelpers";
 import { errorAlert, successAlert } from "@/helpers";
 
 export const usePatientsStore = defineStore({
@@ -58,6 +58,7 @@ export const usePatientsStore = defineStore({
                 ? x["full_name"]?.slice(0, 15)
                 : x["full_name"])
         );
+        this.loading = false;
         successAlert(response);
       } catch (error) {
         this.error = error;

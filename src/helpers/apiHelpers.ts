@@ -9,7 +9,7 @@ const apiClient = axios.create({
     "Content-Type": "application/json",
   },
 });
-function authHeader() {
+const authHeader = () => {
   const token = JSON.parse(localStorage.getItem("token")!);
   const user = JSON.parse(localStorage.getItem("user")!);
 
@@ -19,30 +19,9 @@ function authHeader() {
   } else {
     return "";
   }
-}
+};
 
 apiClient.defaults.headers.common["Authorization"] = authHeader();
-
-// apiClient.interceptors.request.use((config) => {
-//   const user = JSON.parse(localStorage.getItem("user") || "");
-//   let token = user?.token;
-//   alert(token);
-
-//   return config;
-// });
-
-// apiClient.interceptors.response.use(
-//   (response) => {
-//     return response;
-//   },
-//   (error) => {
-//     let res = error.response;
-//     if (res.status == 401) {
-//       window.location.href = baseURL + "/login";
-//     }
-//     return Promise.reject(error);
-//   }
-// );
 
 const responseBody = (response: AxiosResponse): IResponseType => {
   return response.data;

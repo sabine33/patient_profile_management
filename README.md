@@ -1,16 +1,54 @@
-# Vue 3 + TypeScript + Vite
+# Patient Profile Management Frontend
 
-This template should help get you started developing with Vue 3 and TypeScript in Vite. The template uses Vue 3 `<script setup>` SFCs, check out the [script setup docs](https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup) to learn more.
+Patient profile management is an application dashboard that provides a way for an admin to add/update/delete/view patients.
 
-## Recommended IDE Setup
+## Installation
 
-- [VS Code](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar)
+- Clone the repo.
+- Update environment variables.
+- Switch to node version 18 & run following commands.
 
-## Type Support For `.vue` Imports in TS
+```bash
+nvm use 18
+yarn
+yarn dev
+```
 
-Since TypeScript cannot handle type information for `.vue` imports, they are shimmed to be a generic Vue component type by default. In most cases this is fine if you don't really care about component prop types outside of templates. However, if you wish to get actual prop types in `.vue` imports (for example to get props validation when using manual `h(...)` calls), you can enable Volar's Take Over mode by following these steps:
+## Deployment
 
-1. Run `Extensions: Show Built-in Extensions` from VS Code's command palette, look for `TypeScript and JavaScript Language Features`, then right click and select `Disable (Workspace)`. By default, Take Over mode will enable itself if the default TypeScript extension is disabled.
-2. Reload the VS Code window by running `Developer: Reload Window` from the command palette.
+- Clone the repo.
+- `sh nvm use 18 && yarn && yarn build`
+  or use deploy.sh file
 
-You can learn more about Take Over mode [here](https://github.com/johnsoncodehk/volar/discussions/471).
+## Frontend Demo
+
+[DEMO](https://ppm-4440.onrender.com)
+
+## Tools Used
+
+- Render static for deployment (To Render, Github CI/CD)
+- Typescript
+- Vue 3 (with composition API)
+- VITE
+
+## Folder structure
+
+| Folder     | Purpose                         |
+| ---------- | ------------------------------- |
+| src/       | Source code entrypoint          |
+| components | UI Components                   |
+| helpers    | Common helper modules           |
+| interfaces | Interface for different modules |
+| pages      | Pages built with components     |
+| router     | Vue router entry                |
+| schemas    | Validation schema               |
+| store      | Pinia store                     |
+| types      | Typescript types                |
+
+## Packages used and their purpose
+
+| Module       | Purpose         |
+| ------------ | --------------- |
+| pinia        | For store       |
+| Yup          | Form Validation |
+| vee-validate | Form validation |

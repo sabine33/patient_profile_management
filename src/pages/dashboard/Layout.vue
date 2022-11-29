@@ -32,7 +32,9 @@
                             <nav aria-label="breadcrumb">
                                 <ol class="breadcrumb">
                                     <li v-for="item in getBreadcrumb" class="breadcrumb-item">
-                                        <router-link :to="`$/{item}`">{{ item.toLocaleUpperCase() }}</router-link>
+                                        <router-link :to="`$/{item}`">{{
+                                                item.toLocaleUpperCase()
+                                        }}</router-link>
                                     </li>
                                 </ol>
                             </nav>
@@ -48,7 +50,6 @@
 </template>
 <style>
 @import url(https://unpkg.com/@webpixels/css@1.1.5/dist/index.css);
-
 @import url("https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.4.0/font/bootstrap-icons.min.css");
 </style>
 <script lang="ts" setup>

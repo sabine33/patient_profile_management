@@ -18,6 +18,7 @@ app.use(Notifications);
 
 app.config.errorHandler = (err) => {
   // alert(err);
+  console.error(err);
 };
 
 app.mount("#app");

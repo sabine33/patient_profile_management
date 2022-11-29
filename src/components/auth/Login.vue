@@ -6,7 +6,7 @@ import { ref } from "vue"
 import { loginSchema } from '@/schemas';
 
 let user = ref({
-    'email': 'ak@ak.com',
+    'email': 'sabin.khanal.33@gmail.com',
     'password': 'appleball'
 })
 

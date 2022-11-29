@@ -1,7 +1,5 @@
-import { Home, Patients, Users, Profile, Layout } from "@/pages/dashboard";
+import { Home, Patients, Layout } from "@/pages/dashboard";
 import ManagePatient from "@/pages/patients/ManagePatient.vue";
-import ViewPatient from "@/pages/patients/ViewPatient.vue";
-import EditPatient from "@/components/patients/EditPatient.vue";
 
 export default {
   path: "/dashboard",

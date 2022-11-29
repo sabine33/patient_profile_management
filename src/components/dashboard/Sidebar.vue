@@ -14,10 +14,9 @@
                 href="#">
                 <img src="https://www.pngkey.com/png/detail/986-9860667_hospital-management-system-png.png"
                     class="img-fluid" width="100" />
-                <h2 class="">{{ title }}</h2>
+                <!-- <h2 class="">{{ title }}</h2> -->
 
             </router-link>
-            <!-- User menu (mobile) -->
             <div class="navbar-user d-lg-none">
                 <!-- Dropdown -->
                 <div class="dropdown">
@@ -47,16 +46,12 @@
                         </router-link>
                     </li>
 
-
-
-
                     <li class="nav-item">
                         <button class="nav-link" @click.prevent="authStore.logout()">
                             <i class="bi bi-box-arrow-left"></i> Logout
                         </button>
                     </li>
                 </ul>
-                <!-- Divider -->
                 <hr class="navbar-divider my-5 opacity-20">
 
             </div>
@@ -74,3 +69,12 @@ const title = "P.P.M"
 
 
 </script>
+
+<style scoped lang="scss">
+.navbar-brand {
+    img {
+        max-width: 150px;
+        object-fit: contain;
+    }
+}
+</style>

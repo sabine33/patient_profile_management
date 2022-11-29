@@ -4,9 +4,7 @@
         <div class="row g-6 mb-6">
             <InfoCard :stats="stats" />
         </div>
-
-        <FancyTable />
-
+        <SpecialPatientsTable />
     </div>
 
 </template>
@@ -15,15 +13,10 @@
 import { usePatientsStore } from '@/store';
 import { storeToRefs } from 'pinia';
 import { InfoCard } from '@/components/dashboard';
-import FancyTable from './SpecialPatientsTable.vue';
+import SpecialPatientsTable from './SpecialPatientsTable.vue';
 const patientStore = usePatientsStore();
 const { stats } = storeToRefs(patientStore);
 
-
-
 patientStore.fetchStats();
-
 console.log(stats)
-
-
 </script>

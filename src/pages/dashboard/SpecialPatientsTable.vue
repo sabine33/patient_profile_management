@@ -2,7 +2,7 @@
     <div class="card shadow border-0 mb-7">
         <div class="card-header">
             <h5 class="mb-0">Special Patients</h5>
-            <p>Special attention patients are displayed as red.</p>
+            <p>Special attention patients are displayed with red circle.</p>
         </div>
         <div class="table-responsive">
             <table class="table table-hover table-nowrap">
@@ -19,7 +19,7 @@
                 <tbody>
                     <tr v-for="(patient, index) in patientSliced" :key="index">
                         <td>
-                            <img alt="..." :src="`${imageURL}/${patient.avatar_filename}`"
+                            <img alt="..." :src="`${IMAGE_URL}/${patient.avatar_filename}`"
                                 class=" avatar avatar-sm rounded-circle me-2">
                             <a class="text-heading font-semibold"
                                 :class="patient.is_special_attention ? 'text-danger' : 'text-primary'" href="#">
@@ -67,15 +67,15 @@
 </template>
 
 <script setup lang="ts">
+import { IMAGE_URL } from '@/constants';
 import { IPatient } from '@/interfaces';
 import { usePatientsStore } from '@/store';
 import { storeToRefs } from 'pinia';
 import { computed } from 'vue';
 import { useRouter } from "vue-router";
-
 const patientStore = usePatientsStore();
+
 const { patients } = storeToRefs(patientStore);
-let imageURL = `http://127.0.0.1:4000/uploads`;
 
 let router = useRouter();
 
@@ -84,10 +84,6 @@ const PER_PAGE = 5;
 const patientSliced = computed(() => {
     return patients.value.slice(0, PER_PAGE);
 });
-
-patientStore.getAll();
-
-
 
 const deleteItem = async (val: Partial<IPatient>) => {
     if (confirm("Are you sure to delete this patient ?")) {
@@ -107,5 +103,6 @@ const editItem = async (val: Partial<IPatient>) => {
 };
 
 
+patientStore.getAll();
 
 </script>

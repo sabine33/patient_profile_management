@@ -13,7 +13,7 @@
                 <template #item-avatar_filename="{ avatar_filename }">
                     <div class="patient-wrapper">
                         <div class="d-flex flex-row">
-                            <img class="avatar img-fluid" :src="`${imageURL}/${avatar_filename}`" alt="" />
+                            <img class="avatar img-fluid" :src="`${IMAGE_URL}/${avatar_filename}`" alt="" />
                         </div>
                     </div>
                 </template>
@@ -68,10 +68,11 @@ import { Header, Item } from "vue3-easy-data-table";
 import { useRouter } from "vue-router";
 import { storeToRefs } from 'pinia';
 import { usePatientsStore } from '@/store';
+import { IMAGE_URL } from "@/constants";
 const patientStore = usePatientsStore();
 const { patients, loading } = storeToRefs(patientStore);
 
-let imageURL = `http://127.0.0.1:4000/uploads`;
+
 
 
 const headers: Header[] = [
