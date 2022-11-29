@@ -19,7 +19,7 @@
                 <tbody>
                     <tr v-for="(patient, index) in patientSliced" :key="index">
                         <td>
-                            <img alt="..." :src="`${IMAGE_URL}/${patient.avatar_filename}`"
+                            <img :src="`${IMAGE_URL}/${patient.avatar_filename}`"
                                 class=" avatar avatar-sm rounded-circle me-2">
                             <a class="text-heading font-semibold"
                                 :class="patient.is_special_attention ? 'text-danger' : 'text-primary'" href="#">
@@ -46,11 +46,12 @@
                             </span>
                         </td>
                         <td class="text-end">
-                            <a href="#" class="btn btn-sm btn-neutral" @click.prevent="viewItem(patient)">View</a>
-                            <a href="#" class="btn btn-sm btn-neutral" @click.prevent="editItem(patient)">Edit</a>
-
+                            <a href="#" class="btn btn-sm btn-neutral"
+                                @click.prevent="onViewItem(patient.id ?? -1)">View</a>
+                            <a href="#" class="btn btn-sm btn-neutral"
+                                @click.prevent="onEditItem(patient.id ?? -1)">Edit</a>
                             <button type="button" class="btn btn-sm btn-square btn-neutral text-danger-hover"
-                                @click.prevent="deleteItem(patient)">
+                                @click.prevent="onDeleteItem(patient.id ?? -1)">
                                 <i class="bi bi-trash"></i>
                             </button>
                         </td>
@@ -71,39 +72,17 @@ import { IMAGE_URL } from '@/constants';
 import { IPatient } from '@/interfaces';
 import { usePatientsStore } from '@/store';
 import { storeToRefs } from 'pinia';
-import { computed, onMounted } from 'vue';
-import { useRouter } from "vue-router";
+import { computed } from 'vue';
 const patientStore = usePatientsStore();
 
 const { patients } = storeToRefs(patientStore);
-
-let router = useRouter();
+const { onEditItem, onDeleteItem, onViewItem } = patientStore;
 
 const PER_PAGE = 5;
 
 const patientSliced = computed(() => {
-    return patients.value.slice(0, PER_PAGE);
+    return patients.value.slice(0, PER_PAGE) || [];
 });
-
-const deleteItem = async (val: Partial<IPatient>) => {
-    if (confirm("Are you sure to delete this patient ?")) {
-        let { id } = val;
-        await patientStore.delete(id ?? -1);
-
-    }
-};
-const viewItem = async (val: Partial<IPatient>) => {
-    let { id } = val;
-    await router.push({ name: 'manage-patient', params: { mode: 'view', id: id } })
-}
-
-const editItem = async (val: Partial<IPatient>) => {
-    let { id } = val;
-    await router.push({ name: 'manage-patient', params: { mode: 'edit', id } })
-};
-
-onMounted(async () => {
-    await patientStore.getAll();
-});
+patientStore.listPatients();
 
 </script>

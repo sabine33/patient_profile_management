@@ -1,105 +1,112 @@
 import { defineStore } from "pinia";
-import { IPatient, IPatientStore } from "@/interfaces";
-import { Patient } from "@/helpers/apiHelpers";
+import { IPatient, IResponseType } from "@/interfaces";
+import { Patient, Uploads } from "@/helpers/apiHelpers";
 import { errorAlert, successAlert } from "@/helpers";
+import { router } from "@/router";
+
+interface IPatientStore {
+  patients: Partial<IPatient>[];
+  patient: Partial<IPatient>;
+  patientCount: number;
+}
+
 export const usePatientsStore = defineStore({
   id: "patients",
   state: (): IPatientStore => {
     return {
-      loading: false,
       patients: [],
-      stats: {},
-      patient: null,
-      error: "",
-      successResponse: null,
+      patient: {},
+      patientCount: 0,
     };
   },
   actions: {
-    async create(argPatient: Partial<IPatient>) {
+    async onViewItem(id: number) {
+      await router.push({
+        name: "manage-patient",
+        params: { mode: "view", id: id },
+      });
+    },
+    async onEditItem(id: number) {
+      await router.push({
+        name: "manage-patient",
+        params: { mode: "edit", id: id },
+      });
+    },
+    async onDeleteItem(id: number) {
+      if (confirm("Are you sure to delete this patient ?")) {
+        await this.deletePatient(id);
+      }
+    },
+    async onAddItem() {
+      await router.push({
+        name: "manage-patient",
+        params: { mode: "add", id: -1 },
+      });
+    },
+    async onUploadFile(file: any) {
       try {
-        this.error = "";
-        let response = await Patient.createPatient(argPatient);
-        this.successResponse = response;
-        this.patient = response.data;
+        let response = await Uploads.uploadImage(file);
+        this.patient.avatar_filename = response.data.filename;
         successAlert(response);
+        return response.data.filename;
       } catch (ex) {
-        this.error = ex;
-        this.successResponse = null;
         errorAlert(ex);
       }
     },
-    async fetchStats() {
-      this.loading = true;
+    async fetchPatientCount() {
       try {
-        let response = (await Patient.getStats()) || 0;
-        this.successResponse = response;
-
+        let response = await Patient.getStats();
         console.log(response);
-        this.stats = response.data;
-        successAlert(response);
-      } catch (error) {
-        this.error = error;
-        this.successResponse = null;
-        this.loading = false;
+        this.patientCount = response.data?.count || 0;
+      } catch (ex) {
+        errorAlert(ex);
       }
     },
-    async getAll() {
-      this.loading = true;
+    async listPatients() {
       try {
-        let response = (await Patient.getPatients()) || [];
-        this.successResponse = response;
-
+        let response = await Patient.getPatients();
         this.patients = response.data;
-        this.patients.map(
-          (x) =>
-            (x["full_name"] =
-              x["full_name"] ?? "".length > 15
-                ? x["full_name"]?.slice(0, 15)
-                : x["full_name"])
-        );
-        this.loading = false;
         successAlert(response);
-      } catch (error) {
-        this.error = error;
-        this.loading = false;
-        this.successResponse = null;
+      } catch (ex) {
+        errorAlert(ex);
       }
     },
-    async getById(id: number) {
-      this.loading = true;
+    async addPatient(argPatient: Partial<IPatient>) {
+      try {
+        let response = await Patient.createPatient(argPatient);
+        router.push({ name: "list-patients" });
+        successAlert(response);
+      } catch (ex) {
+        errorAlert(ex);
+      }
+    },
+    async deletePatient(id: number) {
+      try {
+        let response = await Patient.deletePatient(id);
+        router.push({ name: "list-patients" });
+        this.patients = this.patients.filter((x) => x.id !== id);
+        successAlert(response);
+      } catch (ex) {
+        errorAlert(ex);
+      }
+    },
+    async getByID(id: number) {
       try {
         let response = await Patient.getPatient(id);
-        this.successResponse = response;
-        this.patient = this.successResponse.data;
+        this.patient = response.data;
         successAlert(response);
-      } catch (error) {
-        this.error = error;
-        this.loading = false;
-        this.successResponse = null;
-
-        errorAlert(error);
+      } catch (ex) {
+        errorAlert(ex);
       }
     },
-    async update(id: number, params: any) {
+    async updatePatient(id: number, patient: Partial<IPatient>) {
       try {
-        this.successResponse = await Patient.updatePatient(id, params);
-        successAlert(this.successResponse);
-      } catch (error) {
-        this.error = error;
-        errorAlert(error);
-        this.successResponse = null;
-      }
-    },
-    async delete(id: number) {
-      this.error = false;
-      try {
-        this.successResponse = await Patient.deletePatient(id);
-        this.patients = this.patients?.filter((x) => x.id !== id);
-        successAlert(this.successResponse);
-      } catch (error: any) {
-        this.error = error;
-        this.successResponse = null;
-        errorAlert(error);
+        let response = await Patient.updatePatient(id, patient);
+        this.patient = response.data;
+        router.push({ name: "list-patients" });
+        successAlert(response);
+      } catch (ex) {
+        errorAlert(ex);
       }
     },
   },

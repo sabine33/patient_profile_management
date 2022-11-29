@@ -1,15 +1,15 @@
 <template>
     <div>
-        <div class="h4 mb-4">{{ modeTitle }}</div>
+        <!-- <div class="h4 mb-4">{{ modeTitle }}</div>
         <div class="notices mb-4">
             <div v-if="loading && !patient">
                 <td colspan="4" class="text-center">
                     <span class="spinner-border spinner-border-lg align-center"></span>
                 </td>
             </div>
-        </div>
-        <Form @submit="onSubmit" :validation-schema="patientSchema" v-slot="{ errors, isSubmitting }" class="row g-3"
-            v-if="patient">
+        </div> -->
+        <Form @submit="onSubmit(patient)" :validation-schema="patientSchema" v-slot="{ errors, isSubmitting }"
+            class="row g-3" v-if="patient">
             <div class="form-group col-lg-6 mt-4">
                 <label>Full Name</label>
                 <Field name="full_name" type="text" class="form-control" :class="{ 'is-invalid': errors.full_name }"
@@ -58,22 +58,22 @@
                     :add-tag-on-keys="[13]" />
             </div>
 
-            <div class="col-12 mt-4" v-if="!isReadOnly">
+
+            <div class="col-12 mt-4" v-if="!isDisabled">
                 <label for="inputPhoto" class="form-label">Patient Photo</label>
                 <div class="form-control">
                     <input type="file" @change="onFileChanged($event)" accept="image/*" ref="file" capture />
                 </div>
             </div>
 
-            <div class="preview mt-4" v-if="imageURL">
-                <img :src="imageURL" width="200" height="200" style="object-fit: contain" />
+            <div class="preview mt-4" v-if="patient.avatar_filename">
+                <img :src="getImageUrl" width="200" height="200" style="object-fit: contain" />
             </div>
 
             <div class="col-12 mt-5 d-flex justify-content-between">
                 <router-link class="btn btn-danger" to="/dashboard/patients">Back to home</router-link>
-                <button type="submit" class="btn btn-primary" @click.prevent="onSubmit" v-if="mode !== 'view'">
+                <button v-if="!isDisabled" type="submit" class="btn btn-primary" @click.prevent="onSubmit(patient)">
                     <span v-show="isSubmitting" class="spinner-border spinner-border-sm mr-1"></span>
-
                     Save
                 </button>
             </div>
@@ -82,106 +82,57 @@
 </template>
 <script setup lang="ts">
 import Vue3TagsInput from "vue3-tags-input";
-import { useRoute, useRouter } from "vue-router";
-import { ref, computed, onMounted, getCurrentInstance } from "vue";
-import { storeToRefs } from "pinia";
-import { usePatientsStore } from "@/store";
-import { Uploads } from "@/helpers/apiHelpers";
-import { IMAGE_URL } from "@/constants";
-import { patientSchema } from "@/schemas";
-import { Form, Field } from "vee-validate";
+import { ref, computed, onMounted } from "vue";
 import { IPatient } from "@/interfaces";
-import { successAlert } from "@/helpers";
-
+import { patientSchema } from "@/schemas";
+import { Field, Form } from "vee-validate";
+import { storeToRefs } from "pinia";
+import { usePatientsStore } from "@/store/patients.store";
+import { useRouter, useRoute } from "vue-router";
+import { IMAGE_URL } from "@/constants";
 const route = useRoute();
-const router = useRouter();
-let { mode, id } = route.params;
 const patientStore = usePatientsStore();
-let file = ref<File | any>(null);
-let remoteFilePath = ref("");
-const instance = getCurrentInstance();
-let { patient, loading, successResponse } = storeToRefs(patientStore);
+const { addPatient, updatePatient, onUploadFile } = patientStore;
+const { patient } = storeToRefs(patientStore);
 
-const loadPatient = async () => {
-    if (mode !== "add") {
-        await patientStore.getById(+id);
-        console.log(successResponse.value);
-        loading.value = false;
-    } else {
-        patient.value = {
-            full_name: "",
-            email: "",
-            phone: "",
-            date_of_birth: "1994-07-17",
-            allergies: [],
-            address: "",
-            avatar_filename: "",
-            is_special_attention: true,
-        };
+const uploadedFileUrl = ref("");
+
+let { mode, id } = route.params;
+
+
+onMounted(() => {
+    if (+id > 0 && mode !== 'add') {
+        patientStore.getByID(+id);
     }
-};
-
-const imageURL = computed(() => {
-    return `${IMAGE_URL}/${patient.value?.avatar_filename}`;
 });
 
+const getImageUrl = computed(() => {
+    return `${IMAGE_URL}/${patient.value.avatar_filename}`;
+});
+
+const onFileChanged = async (event: any) => {
+    let filesList = event?.target?.files;
+    if ((filesList as any[]).length > 0) {
+        let firstFile = filesList[0];
+        let uploadedFileName = await onUploadFile(firstFile);
+        uploadedFileUrl.value = `${IMAGE_URL}/${uploadedFileName}`;
+    }
+}
+
+const isDisabled = computed(() => {
+    return mode === 'view';
+});
+
+const onSubmit = async (patient: Partial<IPatient>) => {
+    if (mode == 'add') {
+        await addPatient(patient);
+    }
+    else {
+        await updatePatient(+id, patient);
+    }
+}
 const handleChangeTag = (tags: []) => {
-    patient.value!.allergies = tags;
-};
-const onFileChanged = async ($event: Event) => {
-    const target = $event.target as HTMLInputElement;
-    if (target && target.files) {
-        file = target.files ? target.files[0] : null;
-        if (file) {
-            // imgDataUrl = URL.createObjectURL(file);
-            await uploadImage(file);
-        }
-    }
-};
+    patient.value.allergies = tags;
+}
 
-const uploadImage = async (file: any) => {
-    let response = await Uploads.uploadImage(file);
-    remoteFilePath.value = response.data.filename;
-    patient.value!.avatar_filename = remoteFilePath.value;
-    instance?.proxy?.$forceUpdate();
-    successAlert(response);
-};
-
-const isReadOnly = computed(() => {
-    return mode === "view";
-});
-
-const modeTitle = computed(() => {
-    let title = "";
-    if (mode == "add") {
-        title = "Add Patient";
-    } else if (mode == "view") {
-        title = "Patients Info";
-    } else if (mode == "edit") {
-        title = "Edit Patient";
-    }
-    return title;
-});
-
-const onSubmit = async () => {
-    if (mode == "add") {
-        let patientInfo = patient.value as IPatient;
-        await patientStore.create(patientInfo);
-        if (successResponse && successResponse.value?.status) {
-            router.push("/dashboard/patients");
-        }
-    } else if (mode == "edit") {
-        let patientId = patient.value?.id || -1;
-        let patientUpdated = await patientStore.update(patientId, patient.value);
-        if (successResponse.value?.status) {
-            router.push("/dashboard/patients");
-        }
-    } else {
-        return;
-    }
-};
-
-onMounted(async () => {
-    await loadPatient();
-});
 </script>

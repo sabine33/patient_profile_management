@@ -1,1 +1,1 @@
-export { default as PatientList } from "./PatientList.vue";
+export { default as List } from "./List.vue";

@@ -1,5 +1,7 @@
 import { Home, Patients, Layout } from "@/pages/dashboard";
+import List from "@/pages/patients/List.vue";
 import ManagePatient from "@/pages/patients/ManagePatient.vue";
+import PatientForm from "@/pages/patients/PatientForm.vue";
 
 export default {
   path: "/dashboard",
@@ -15,20 +17,22 @@ export default {
     },
     {
       path: "/dashboard/patients",
-      component: Patients,
+      component: List,
       title: "Patients",
-      name: "list",
+      name: "list-patients",
       class: "bi bi-emergency",
-      children: [
-        {
-          name: "manage-patient",
-          path: "/dashboard/patients/:mode/:id",
-          component: ManagePatient,
-          title: "Manage Patients",
-          class: "bi bi-emergency",
-          props: true,
-        },
-      ],
+      // children: [
+
+      // ],
+    },
+    {
+      name: "manage-patient",
+      path: "/dashboard/patients/:mode/:id",
+      component: PatientForm,
+      title: "Manage Patients",
+      class: "bi bi-emergency",
+      props: true,
+      hidden: true,
     },
   ],
 };
