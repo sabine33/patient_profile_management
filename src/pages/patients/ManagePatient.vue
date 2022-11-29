@@ -167,7 +167,7 @@ const onSubmit = async () => {
     if (mode == "add") {
         let patientInfo = patient.value as IPatient;
         await patientStore.create(patientInfo);
-        if (successResponse.value?.status) {
+        if (successResponse && successResponse.value?.status) {
             router.push("/dashboard/patients");
         }
     } else if (mode == "edit") {
