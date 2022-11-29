@@ -8,43 +8,44 @@
                 </td>
             </div>
         </div>
-        <Form @submit="onSubmit" :validation-schema="patientSchema" v-slot="{ errors, isSubmitting }" class="row g-3">
+        <Form @submit="onSubmit" :validation-schema="patientSchema" v-slot="{ errors, isSubmitting }" class="row g-3"
+            v-if="patient">
             <div class="form-group col-lg-6 mt-4">
                 <label>Full Name</label>
                 <Field name="full_name" type="text" class="form-control" :class="{ 'is-invalid': errors.full_name }"
-                    v-model="patient!.full_name" />
+                    v-model="patient.full_name" />
                 <div class="invalid-feedback">{{ errors.full_name }}</div>
             </div>
 
             <div class="form-group col-lg-6 mt-4">
                 <label>Email</label>
                 <Field name="email" type="email" class="form-control" :class="{ 'is-invalid': errors.email }"
-                    v-model="patient!.email" />
+                    v-model="patient.email" />
                 <div class="invalid-feedback">{{ errors.email }}</div>
             </div>
 
             <div class="form-group col-lg-6 mt-4">
                 <label>Phone</label>
                 <Field name="phone" type="number" class="form-control" :class="{ 'is-invalid': errors.phone }"
-                    v-model="patient!.phone" />
+                    v-model="patient.phone" />
                 <div class="invalid-feedback">{{ errors.phone }}</div>
             </div>
             <div class="form-group col-lg-6 mt-4">
                 <label>Date of birth</label>
                 <Field name="date_of_birth" type="date" class="form-control"
-                    :class="{ 'is-invalid': errors.date_of_birth }" v-model="patient!.date_of_birth" />
+                    :class="{ 'is-invalid': errors.date_of_birth }" v-model="patient.date_of_birth" />
                 <div class="invalid-feedback">{{ errors.date_of_birth }}</div>
             </div>
             <div class="form-group col-lg-6 mt-4">
                 <label>Address</label>
                 <Field name="address" type="text" class="form-control" :class="{ 'is-invalid': errors.address }"
-                    v-model="patient!.address" />
+                    v-model="patient.address" />
                 <div class="invalid-feedback">{{ errors.address }}</div>
             </div>
             <div class="col-lg-6 mt-4 pt-3">
                 <div class="form-check form-switch">
                     <input class="form-check-input" type="checkbox" id="special-attention"
-                        v-model="patient!.is_special_attention" />
+                        v-model="patient.is_special_attention" />
                     <label class="form-check-label" for="special-attention">
                         Special Attention Patient
                     </label>
@@ -99,7 +100,8 @@ let file = ref<File | any>(null);
 let remoteFilePath = ref("");
 
 
-let { patient, error, loading, successResponse } = storeToRefs(patientStore);
+let { patient, loading, successResponse } = storeToRefs(patientStore);
+
 
 const loadPatient = async () => {
     if (mode !== "add") {
@@ -107,11 +109,17 @@ const loadPatient = async () => {
         console.log(successResponse.value);
         loading.value = false;
     }
-    else if (mode == "add") {
-        patient.value = {};
-    }
     else {
-
+        patient.value = {
+            full_name: "",
+            email: "",
+            phone: "",
+            date_of_birth: '1994-07-17',
+            allergies: [],
+            address: "",
+            avatar_filename: "",
+            is_special_attention: true
+        };
     }
 };
 
@@ -175,5 +183,6 @@ const onSubmit = async () => {
 
 onMounted(async () => {
     await loadPatient();
+
 });
 </script>

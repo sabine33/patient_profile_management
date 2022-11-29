@@ -24,6 +24,13 @@ yarn dev
 
 [DEMO](https://ppm-4440.onrender.com)
 
+## Screenshots
+
+![Demo](screenshot_1.png?raw=true "Screenshot")
+![Demo](screenshot_2.png?raw=true "Screenshot")
+![Demo](screenshot_3.png?raw=true "Screenshot")
+![Demo](screenshot_4.png?raw=true "Screenshot")
+
 ## Tools Used
 
 - Render static for deployment (To Render, Github CI/CD)

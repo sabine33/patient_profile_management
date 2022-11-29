@@ -22,6 +22,7 @@ export const useAuthStore = defineStore({
       try {
         //login via auth
         const response = await Auth.login(email, password);
+        alert(JSON.stringify(response.data));
         //set local values
         this.user = response.data.user;
         this.token = response.data.token;
